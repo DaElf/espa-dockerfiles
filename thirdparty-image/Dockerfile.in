@@ -137,19 +137,19 @@ RUN cd $SRC_DIR \
     && rm -rf xz-5.2.2 xz-5.2.2.tar.gz
 
 
+ENV SZIP=szip-2.1
 # Install szip
-COPY external_tools/szip-2.1.tar.gz $SRC_DIR
+COPY external_tools/$SZIP.tar.gz $SRC_DIR
 RUN cd $SRC_DIR \
-    && tar -xvf szip-2.1.tar.gz \
-    && cd szip-2.1 \
+    && tar -xvf $SZIP.tar.gz \
+    && cd $SZIP \
     && ./configure --prefix=$SZIP_PREFIX \
         --enable-shared \
         --enable-static \
     && make -j4 \
     && make install \
     && cd $SRC_DIR \
-    && rm -rf szip-2.1 szip-2.1.tar.gz
-
+    && rm -rf $SZIP $SZIP.tar.gz
 
 # Install libxml2
 COPY external_tools/libxml2-2.9.3.tar.gz $SRC_DIR
@@ -355,10 +355,11 @@ RUN cd $SRC_DIR \
     && rm -rf netcdf-4.4.0 netcdf-4.4.0.tar.gz
 
 
+ENV HDFSEOS=HDF-EOS2.19v1.00
 # Install HDFEOS2
-COPY external_tools/HDF-EOS2.19v1.00.tar.Z $SRC_DIR
+COPY external_tools/$HDFSEOS.tar.Z $SRC_DIR
 RUN cd $SRC_DIR \
-    && tar -xvf HDF-EOS2.19v1.00.tar.Z \
+    && tar -xvf $HDFSEOS.tar.Z \
     && cd hdfeos \
     && ./configure --prefix=$HDFEOS_PREFIX \
         --with-jpeg=$JPEGLIB \
@@ -371,7 +372,7 @@ RUN cd $SRC_DIR \
     && make -j4 \
     && make install \
     && cd $SRC_DIR \
-    && rm -rf hdfeos HDF-EOS2.19v1.00.tar.Z
+    && rm -rf hdfeos $HDFSEOS.tar.Z
 
 
 # Python environment setup
