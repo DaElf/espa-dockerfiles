@@ -7,8 +7,14 @@ MAINTAINER USGS EROS LSRD http://eros.usgs.gov
 LABEL description="External software we use installed into the image as well as additional CENTOS repo packages required for building and executing ESPA-Product-Fulfillment."
 
 
+RUN yum -y install epel-release && \
+    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 && \
+    yum -y install https://centos7.iuscommunity.org/ius-release.rpm && \
+    rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
+
 # Compilers and all the rquired libraries
 RUN yum group install -y "Development Tools" \
+    && yum remove -y git \
     && yum install -y \
         e2fsprogs \
         expat-devel \
@@ -26,23 +32,8 @@ RUN yum group install -y "Development Tools" \
         libpng-devel \
         libpng-static \
         rpm-build \
+	git2u \
     && yum clean metadata
-
-
-# Update git to a version that isn't broken
-RUN cd /usr/local/src \
-    && git clone \
-        --depth 1 \
-        --branch v2.17.0 \
-        https://github.com/git/git.git git.git \
-    && cd git.git \
-    && make configure \
-    && ./configure --without-tcltk \
-    && make -j4 \
-    && make install \
-    && cd .. \
-    && rm -rf git.git
-
 
 # Source and installation locations
 ENV PREFIX=/usr/local \
